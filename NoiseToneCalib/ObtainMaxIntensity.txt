@@ -1,0 +1,19 @@
+%%%% For the noise %%%%%
+
+y = zeros(441000,2);
+y(:,1) = wavread('NoiseCalib');
+sound(y,44100)
+
+y = zeros(441000,2);
+y(:,2) = wavread('NoiseCalib');
+sound(y,44100)
+
+
+%%%% For the 1000 hz pure tone %%%%%
+y = zeros(441000,2);
+y(:,1) = wavread('Tone1000Calib');
+sound(y,44100)
+
+y = zeros(441000,2);
+y(:,2) = wavread('Tone1000Calib');
+sound(y,44100)
