@@ -1,0 +1,39 @@
+/media/database3/quarantine/guillimin/niak-0.7c3/
+
+
+1. Create folder on my own desktop with all the files that need to be put to surfaces. 
+
+
+
+2. Open octave, use: "build_path_std"
+
+
+	a. If files are in .nii:
+ 
+		fi = '/home/hereinlies/Desktop/Image2Trans'; %path of the folder containing the files to be changed.
+		
+		opt.flag_zip = false;
+
+		niak_brick_nii2mnc(fi,fi,opt)
+
+
+
+3. Change files to mnc
+	
+	addpath('/media/My\ Passport/MatlabToolboxes/Surface_plotting');
+
+	ppath = fi;
+
+	Mass_Trans2Surf(ppath);
+	
+
+
+4. Move to matlab
+
+	a. addpath(genpath('F:\MatlabToolboxes\Surface_plotting'))
+	b. addpath(genpath('F:\MatlabToolboxes\Niak\niak_0.7c3\'))	
+	c. ssurf = niak_read_surf({'mni_icbm152_t1_tal_nlin_sym_09a_surface_mid_left.obj','mni_icbm152_t1_tal_nlin_sym_09a_surface_mid_right.obj'});
+%Change les lignes 28 à 31 du script: Launch_max_visu_surf_4modularityStudy
+%Quick and dirty:
+%opt.Limits = [1 191]; opt.CoType = 5;
+%info = max_visu_surf(data, ssurf, 1, 0,opt);

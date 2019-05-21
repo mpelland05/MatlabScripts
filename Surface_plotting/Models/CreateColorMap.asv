@@ -1,0 +1,9 @@
+%Create color maps
+
+%RedYel
+Red = [.75 linspace(192/256,1,255)];
+Green = [.75 zeros(1,85) linspace(0,1,85) ones(1,85)];
+Blue = [.75 zeros(1,170) linspace(0,0.5,85)];
+
+map = zeros(256,3);
+map(:,1) = Red; map(:,2) = Green; map(:,3) = Blue;

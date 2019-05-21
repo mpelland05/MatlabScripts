@@ -1,0 +1,10 @@
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_white_left.obj /output.dat
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_white_right.obj /output.dat
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_gray_left.obj /output.dat
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_gray_right.obj /output.dat
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_mid_left.obj /output.dat
+volume_object_evaluate -nearest_neighbour /vol.mnc /path/mni_icbm152_t1_tal_nlin_sym_09a_surface_mid_right.obj /output.dat
+
+/Users/clemart/Desktop/MaximeStuff/f2surf
+
+volume_object_evaluate -nearest_neighbour /Users/clemart/Desktop/MaximeStuff/f2surf/WholeMask_numVoxels_3mm.mnc /Users/clemart/Desktop/MaximeStuff/f2surf/mni_icbm152_t1_tal_nlin_sym_09a_surface_white_left.obj /Users/clemart/Desktop/MaximeStuff/f2surf/lr_output_mm3.dat
