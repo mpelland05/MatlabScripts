@@ -1,0 +1,57 @@
+function fft_results = max_brick_fft(files_in)
+%This function will go trhough all files found within a folder and run the FFT on them
+%
+%files_in.
+%	path	string, full path to folder containing files to analyze
+%	seeds	integers, list of seeds to extract [25 37 38 42 43 46 47 50];
+
+fs = filesep;
+
+seeds = files_in.seeds;
+bpath = files_in.path;
+
+%%%%%%%%%
+% Pierre's way of getting rid of folders or files
+%%%%%%%%%
+dir_files = dir(bpath);
+mask_dir = [dir_files.isdir];
+list_all = {dir_files.name};
+mask_dot = ismember(list_all,{'.','..'});
+dir_files = dir_files(~mask_dot);
+mask_dir = mask_dir(~mask_dot);
+list_all = list_all(~mask_dot);
+list_files = list_all(~mask_dir);
+list_dir = list_all(mask_dir);
+
+nsubj = list_files;
+
+%create output folder
+mkdir(bpath,'FFT');
+
+for ss = 1:length(nsubj),
+	temp = load(strcat(bpath,fs,nsubj{ss})); temp = temp.tseries;
+	temp = niak_normalize_tseries(temp);
+	temp = abs(fft(temp));
+    size(temp)
+
+	for se = 1:length(seeds),
+		if ss == 1,
+			[s1 s2] = size(temp); s1 = floor((s1-1)/2);
+			fft_results{se} = zeros([length(nsubj) s1]);
+            ffts{se}=zeros([length(nsubj) 6]);
+		end
+		fft_results{se}(ss,:) = temp(1:s1, seeds(se))'; 
+    end
+end
+
+for se = 1:length(seeds),
+	xlswrite(strcat(bpath,fs,'FFT',fs,'FFT_output.xls'),fft_results{se}, strcat('s',num2str(seeds(se))) );
+    
+    tt = fft_results{se};
+    ffts{se}= [mean(tt())];
+end
+
+save(strcat(bpath,fs,'FFT',fs,'FFT_output.mat'),'fft_results')
+
+end
+
