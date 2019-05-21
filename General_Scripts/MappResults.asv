@@ -1,0 +1,27 @@
+%This script will take the .mat results for varying comparisions of graph
+%theory measure and map them unto a brain. 
+
+SubScales = {'sci3_scg3_scf3' 'sci5_scg5_scf5' 'sci13_scg10_scf10' 'sci20_scg22_scf26' 'sci40_scg40_scf40'};
+Tests = {'Betweenness' 'Closeness' 'Clustering' 'Degrees'};
+Mask = 'fdr'; %otions, fdr or p
+alpha = 0.05;
+
+for ss = 1:length(SubScales),
+    for tt = 1:length(Tests),
+        files_in.partition = strcat('F:\Modularity\fmri\basc_RestOnly_CBSCMixed_OccMask_f\stability_group\',SubScales{ss},'\brain_partition_consensus_group_',SubScales{ss},'.nii');
+        load(strcat('F:\GraphAnalysis\results\Jan11_2015_',SubScales{ss},'\',Tests{tt},'_Main_Effect_tvalue.mat'));
+    
+        [fdr test] = niak_fdr(Results.pvalue.mat,'BH',alpha);
+        
+        sum(test);
+        
+        files_in.data = Results.tvalue.mat.*test;
+    
+        Subscales{ss}(( strfind(SubScales{1},'scf') + 2):end)
+        
+        files_out = strcat('F:\GraphAnalysis\results\Jan11_2015_',SubScales{ss},'\',Tests{tt},'_M_tvalue.nii');
+    
+        Export2Volume(files_in,files_out);
+    
+    end
+end

@@ -1,0 +1,101 @@
+fs = filesep;
+
+%%%%%%%%
+% Add filesep to end of base path
+%%%%%%%%
+if basePath(end) ~= fs,
+   basePath = strcat(basePath,fs); 
+end
+
+%%%%%%%%%
+% Pierre's way of getting rid of folders or files
+%%%%%%%%%
+dir_files = dir(files_in);
+mask_dir = [dir_files.isdir];
+list_all = {dir_files.name};
+mask_dot = ismember(list_all,{'.','..'});
+dir_files = dir_files(~mask_dot);
+mask_dir = mask_dir(~mask_dot);
+list_all = list_all(~mask_dot);
+list_files = list_all(~mask_dir);
+list_dir = list_all(mask_dir);
+
+
+%%%%%%%%
+%find list of files names using  files_in.path
+%%%%%%%%
+tdir = dir(files_in.path);
+tnam = find(vertcat(tdir.isdir) == 0);
+
+for tt = 1:length(tnam),
+    tpnames{tt} = tdir(tnam(tt)).name;
+end
+	
+
+%%%%%%%%
+%find list of folder names using  files_in.path
+%%%%%%%%
+tdir = dir(files_in.path);
+tnam = find(vertcat(tdir.isdir) == 1);
+
+for tt = 1:length(tnam), tpnames{tt} = tdir(tnam(tt)).name;end
+
+%Remove . and ..
+tt = find(strcmp(tpnames,'.'));
+if ~isempty(tt),tpnames{tt} = [];end
+tt = find(strcmp(tpnames,'..'));
+if ~isempty(tt),tpnames{tt} = [];end
+	
+
+
+%%%%%%% BEWARE!!!!
+%Filter a cell array (keep specified strings)
+%%%%%%%
+for ff = 1:length(files_in.filter_in),
+	tLoc(ff,:) = cellfun('isempty',strfind(tpnames,files_in.filter_in{ff})) == 0;
+end
+tpnames = tpnames(find(sum(tLoc,1) > 0));
+
+
+
+%%%%%%% 
+%Filter a cell array (remove specified string)
+%%%%%%%
+for ff = 1:length(files_in.filter_out),
+	tLoc = find(cellfun('isempty',strfind(tpnames,files_in.filter_out{ff})) == 1);
+	tpnames = tpnames(tLoc);
+end
+
+
+
+
+%%%%
+% Create Output directory if does not exist
+%%%%
+if ~isdir(files_out),
+    mkdir(files_out);
+end
+
+
+
+%%%%%%%
+%Assign defaults to variables that were not included in files_in
+%%%%%%%
+list_fields    = { 'path' , 'fType' ,  };
+list_defaults  = { NaN    , '.mnc.gz', };
+files_in = psom_struct_defaults(files_in,list_fields,list_defaults);
+
+%%%%%%%%
+%know whether the original file is .mnc , .nii and .gz
+%%%%%%%%
+       [pathstr, name, ext, versn] = fileparts(strcat(basePath,tpnames{vv}));
+       if ext == '.gz'
+           [bbb, name, ext2, ddd] = fileparts(strcat(basePath,tpnames{vv}));
+           ext = strcat(ext,ext2);
+       end
+       pathstr = strcat(pathstr,fs);
+
+%%%%%%
+% Make sure that path does not end with filesep
+%%%%%%
+if files_in.path(end) == fs, files_in.path = files_in.paht(1:end);end
