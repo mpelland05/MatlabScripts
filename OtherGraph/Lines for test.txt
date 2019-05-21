@@ -1,0 +1,3 @@
+adj_mat = ConnMatrix.rest.CB.mat(:,:,1);
+adj_mat = threshold_proportional(adj_mat,.4);
+adj_mat(find(adj_mat > 0)) = 1;
