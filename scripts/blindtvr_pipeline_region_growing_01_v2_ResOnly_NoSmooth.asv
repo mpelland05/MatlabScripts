@@ -1,0 +1,50 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Setting input/output files %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear all
+
+root_path = '/home/mpelland/database/blindtvr/fmri/';
+%%%%%%%%%
+%Grabbing
+%%%%%%%%%
+opt_g.min_nb_vol = 80; %<-------------------------------------------------------modify to fit the current data!
+files_in = niak_grab_fmri_preprocess([root_path 'fmri_preprocess_01_RestOnly_NoSmooth/'],opt_g);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Modifying structure to separate rest and task into participants
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%[temp_fmri labels] = niak_fmri2cell(files_in.data);
+%for ii = 1:length(temp_fmri),
+%    data.(labels(ii).name).s.r = temp_fmri{ii};
+%end
+
+%files_in.data = data;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Removing LBs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fname = fieldnames(files_in.data);
+for ii = 1:length(fieldnames),
+   if fname{ii}(1:2) = 'LB',
+       files_in.data = rmf
+       ield(files_in.data,fnames{ii});
+   end
+end
+
+%%%%%%%%%%%%%
+% Region growing
+%%%%%%%%%%%%%
+opt.folder_out = [root_path 'region_growing_01_RestOnly_NoSmooth/']; 
+opt.flag_roi = true; 
+opt.region_growing.thre_size = 1000; % The critical size for regions
+
+files_in.infos = '/home/mpelland/database/blindtvr/models/rest.csv';
+
+
+%% Run the pipeline
+opt.flag_test = 0;
+[pipeline_rg,opt] = niak_pipeline_stability_rest(files_in,opt);
+
+%Won't the fact that there is more volumes for the task bias the regions of
+%homogeneity that are created?
