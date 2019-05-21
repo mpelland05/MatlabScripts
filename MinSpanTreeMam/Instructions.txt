@@ -1,0 +1,3 @@
+Simply drop the "CompiledConnectivityMatrices.mat" into the same folder as thse files and launch the analysis.
+
+Files saved in the current directory. 
